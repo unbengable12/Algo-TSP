@@ -28,6 +28,37 @@ python test.py
 - `outputs/`：输出目录
 - `ground_truth.py`: 测试数据生成
 
+## 使用测试数据
+
+使用工厂实例获取对应的数据：
+
+```python
+from loader import TSPInstanceFactory
+
+# 初始化工厂
+factory = TSPInstanceFactory("tsp_instances_solved.csv")
+
+# 获取所有实例
+all_instances = factory.get_all()
+
+# 按单个类别获取
+small_instances = factory.get_by_category("Small")
+medium_instances = factory.get_by_category("Medium")
+large_instances = factory.get_by_category("Large")
+clustered_instances = factory.get_by_category("Clustered")
+grid_instances = factory.get_by_category("Grid")
+
+# 按多个类别获取
+instances = factory.get_by_categories(["Medium", "Clustered", "Grid"])
+
+# 按实例ID获取
+instance = factory.get_by_id("instance_001")
+```
+
+### 评测流程
+
+见`test.py`
+
 ## 拓展
 
 ### 1. 新增求解算法
