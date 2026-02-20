@@ -112,7 +112,7 @@ def _plot_heatmap_size(df: pd.DataFrame, out_dir: str) -> None:
     """绘制规模分箱-求解器的运行时间热图。"""
     metric = "Runtime(s)"
     dfb = _size_bins(df)
-    pivot = dfb.pivot_table(index="size_bin", columns="solver", values=metric, aggfunc="mean")
+    pivot = dfb.pivot_table(index="size_bin", columns="solver", values=metric, aggfunc="mean", observed=False)
     plt.figure(figsize=(7, 4))
     if _HAS_SEABORN:
         sns.heatmap(pivot, annot=True, fmt=".4f", cmap="magma")
@@ -132,10 +132,10 @@ def _advantage_region(df: pd.DataFrame, out_dir: str) -> pd.DataFrame:
     dfb = _size_bins(df)
     metric_gap = "OptimalityGap(%)"
     metric_time = "Runtime(s)"
-    agg = dfb.groupby(["size_bin", "solver"])[[metric_gap, metric_time]].mean().reset_index()
+    agg = dfb.groupby(["size_bin", "solver"], observed=False)[[metric_gap, metric_time]].mean().reset_index()
 
     winners = []
-    for size_bin, g in agg.groupby("size_bin"):
+    for size_bin, g in agg.groupby("size_bin", observed=False):
         g_sorted = g.sort_values([metric_gap, metric_time])
         best = g_sorted.iloc[0]
         winners.append({
